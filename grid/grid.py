@@ -117,9 +117,9 @@ class Grid:
                 plt.scatter(x_values, ys, color="black", s=1)
             except ValueError as e:
                 print(f"Skipping x={x}: {e}")
-        plt.xlabel("x value")
-        plt.ylabel("y value")
-        plt.title("1D Plot of y values for all x values")
+        plt.xlabel("x")
+        plt.ylabel("y")
+        plt.title("Nodes of the grid")
         plt.legend()
         plt.grid(True)
         plt.savefig("grid.svg")

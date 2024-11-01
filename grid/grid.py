@@ -147,5 +147,5 @@ class Grid:
         plt.title("Nodes of the grid")
         plt.legend()
         plt.grid(True)
-        plt.savefig("grid.svg")
+        plt.savefig("./out/grid.svg")
         plt.show()

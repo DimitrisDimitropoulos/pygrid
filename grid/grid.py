@@ -44,6 +44,10 @@ class Grid:
             xs.append(x)
             dx *= lambda_
             x += dx
+        # make first at 0 and last at xMax
+        # NOTE: this is a manipulation of the original code
+        xs[0] = 0
+        xs[-1] = self.border.xMax
         return xs
 
     def plotX(self):

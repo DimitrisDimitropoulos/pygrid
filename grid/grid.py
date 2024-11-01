@@ -77,21 +77,16 @@ class Grid:
             y += dy
             ys.append(y)
             dy *= lambda_
-        # New y star is the end of the list
-        y_star_upper = ys[-1]
-        # Calculate nodes for the upper part using a new y_star_upper
-        y = self.border.get_upper(x)
-        dy = dy0
-        upper_ys = []
-        while y > y_star_upper:
-            upper_ys.append(y)
-            dy *= lambda_
-            y -= dy
-            # delete the last element if the difference with y_star_upper is less 0.2
-            if abs(y - y_star_upper) < 0.05:
-                upper_ys.pop()
-        # Append the upper part nodes in reverse order
-        ys.extend(reversed(upper_ys))
+        # Delete the last value and replace it with y_star
+        ys = ys[:-1]
+        ys.append(y_star)
+        # Calculate the symmetric points against y_star
+        # ys = ys[:-1]  # remove the last value
+        upper_part = [2 * y_star - y for y in reversed(ys)]
+        # Append the upper part nodes
+        ys.extend(upper_part)
+        # print the length the x and lambda
+        # print(f"X: {x}, YLen: {len(ys)}, Lambda: {lambda_}")
         return ys
 
     def plotY(self, x):

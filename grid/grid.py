@@ -129,6 +129,29 @@ class Grid:
         plt.grid(True)
         plt.show()
 
+    def xgrid(self, i, j):
+        """
+        Return the x-value at grid point (i, j).
+        Since x-values do not depend on j, the j parameter is not used.
+        :param i: Index along the x-axis
+        :param j: Index along the y-axis (not used)
+        :return: x-value at grid point (i, j)
+        """
+        xs = self.calcX()
+        return xs[i]
+
+    def ygrid(self, i, j):
+        """
+        Return the y-value at grid point (i, j).
+        The y-values depend on x, so we use x index i to get ys at that x.
+        :param i: Index along the x-axis
+        :param j: Index along the y-axis
+        :return: y-value at grid point (i, j)
+        """
+        x = self.calcX()[i]
+        ys = self.calcY(x)
+        return ys[j]
+
     def plotYForAllX(self):
         """
         Plot the vector of y-values for all x-values in the same plot.

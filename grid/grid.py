@@ -1,4 +1,4 @@
-import numpy as np
+from scipy.optimize import newton
 from border.border import Border
 import matplotlib.pyplot as plt
 
@@ -11,6 +11,30 @@ class Grid:
         :param num_points: Number of points in the grid
         """
         self.border = border
+
+    def _calculate_lambda(self, x, d0, lambda_initial, nodes):
+        """
+        Private method to calculate lambda for a given x, d0, and initial lambda
+        by solving a nonlinear equation using the Newton-Raphson algorithm.
+        :param x: The x position
+        :param d0: Initial distance or spacing
+        :param lambda_initial: Initial guess for lambda
+        :return: Calculated value of lambda
+        """
+        y_len = self.border.get_distance(x)
+
+        # Define the nonlinear equation to solve
+        def equation(lambda_):
+            return (
+                d0 * (lambda_ ** ((nodes * 0.5) - 1))
+                - 0.5 * y_len * lambda_
+                + 0.5 * y_len
+                - d0
+            )
+
+        # Use Newton-Raphson method to find the root
+        lambda_solution = newton(equation, lambda_initial, maxiter=100000, tol=1e-12)
+        return lambda_solution
 
     def calcX(self):
         """
@@ -70,7 +94,9 @@ class Grid:
         y_star = self.border.get_upper(x) - y_len / 2
         y = self.border.get_lower(x)
         dy0 = 10**-4
-        lambda_ = 1.1
+        lambda_initial = 1.1  # Initial guess for lambda
+        # Calculate lambda using the private method
+        lambda_ = self._calculate_lambda(x, dy0, lambda_initial, 180)
         ys.append(y)
         dy = dy0
         while y < y_star:

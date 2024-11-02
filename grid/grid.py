@@ -172,3 +172,41 @@ class Grid:
         plt.grid(True)
         plt.savefig("./out/grid.svg")
         plt.show()
+
+    def plotGrid(self):
+        """
+        Plot the vector of y-values for all x-values in the same plot,
+        connecting them to appear as a grid.
+        """
+        xs = self.calcX()
+        plt.figure(figsize=(10, 6))
+        # Plot points and lines to form a grid
+        for x in xs:
+            try:
+                ys = self.calcY(x)
+                x_values = [x] * len(ys)  # x-values set to the current x for each y
+                # Plot individual nodes
+                plt.scatter(x_values, ys, color="black", s=1)
+                # Connect nodes in a row along the y-axis
+                plt.plot([x] * len(ys), ys, color="gray", linewidth=0.5)
+            except ValueError as e:
+                print(f"Skipping x={x}: {e}")
+        # Connect nodes in columns along the x-axis
+        for i in range(len(xs) - 1):
+            try:
+                ys_current = self.calcY(xs[i])
+                ys_next = self.calcY(xs[i + 1])
+                # Only connect nodes if both y-lists are of the same length
+                if len(ys_current) == len(ys_next):
+                    for y1, y2 in zip(ys_current, ys_next):
+                        plt.plot(
+                            [xs[i], xs[i + 1]], [y1, y2], color="gray", linewidth=0.5
+                        )
+            except ValueError as e:
+                print(f"Skipping connection between x={xs[i]} and x={xs[i + 1]}: {e}")
+        plt.xlabel("x")
+        plt.ylabel("y")
+        plt.title("Connected Nodes of the Grid")
+        plt.grid(True)
+        plt.savefig("./out/connected_grid.svg")
+        plt.show()

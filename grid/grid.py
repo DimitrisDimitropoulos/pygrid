@@ -96,7 +96,7 @@ class Grid:
         dy0 = 10**-4
         lambda_initial = 1.1  # Initial guess for lambda
         # Calculate lambda using the private method
-        lambda_ = self._calculate_lambda(x, dy0, lambda_initial, 180)
+        lambda_ = self._calculate_lambda(x, dy0, lambda_initial, 181)
         ys.append(y)
         dy = dy0
         while y < y_star:
@@ -107,7 +107,7 @@ class Grid:
         ys = ys[:-1]
         ys.append(y_star)
         # Calculate the symmetric points against y_star
-        # ys = ys[:-1]  # remove the last value
+        ys = ys[:-1]  # remove the last value
         upper_part = [2 * y_star - y for y in reversed(ys)]
         # Append the upper part nodes
         ys.extend(upper_part)

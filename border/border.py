@@ -1,5 +1,5 @@
 # border/border.py
-import math
+import numpy as np
 
 
 class Border:
@@ -30,16 +30,55 @@ class Border:
         """
         return self.y1
 
+    def _calculate_coefficients(self):
+        """
+        Private method to calculate the coefficients a3, a2, a1, a0 by solving a linear system.
+        Constraints:
+            P(x2) = 0
+            P(x3) = -abs(y2 - y1)
+            P'(x2) = 0
+            P'(x3) = 0
+        """
+        x2 = self.x2
+        x3 = self.x3
+        y1 = self.y1
+        y2 = self.y2
+        # Calculate delta_y
+        delta_y = -abs(y2 - y1)  # P(x3) = -|y2 - y1|
+        # Set up the equations based on the constraints
+        # Equation 1: P(x2) = 0
+        # Equation 2: P(x3) = delta_y
+        # Equation 3: P'(x2) = 0
+        # Equation 4: P'(x3) = 0
+        # Coefficient matrix A
+        A = np.array(
+            [
+                [x2**3, x2**2, x2, 1],  # P(x2) = 0
+                [x3**3, x3**2, x3, 1],  # P(x3) = delta_y
+                [3 * x2**2, 2 * x2, 1, 0],  # P'(x2) = 0
+                [3 * x3**2, 2 * x3, 1, 0],  # P'(x3) = 0
+            ]
+        )
+        # Right-hand side vector b
+        b = np.array(
+            [
+                0,  # P(x2) = 0
+                delta_y,  # P(x3) = -abs(y2 - y1)
+                0,  # P'(x2) = 0
+                0,  # P'(x3) = 0
+            ]
+        )
+        # Solve the linear system A * [a3, a2, a1, a0]^T = b
+        coefficients = np.linalg.solve(A, b)
+        return coefficients
+
     def get_lower(self, x):
         """
         Get the y-coordinate of the lower border at a given x-coordinate.
         :param x: The x-coordinate
         :return: The y-coordinate of the lower border
         """
-        a3 = 8.68055 * 1e-4
-        a2 = -0.145834
-        a1 = 7.79167
-        a0 = -134.445
+        a3, a2, a1, a0 = self._calculate_coefficients()
         if x < self.x2 and x >= 0:
             return 0
         elif self.x2 <= x <= self.x3:

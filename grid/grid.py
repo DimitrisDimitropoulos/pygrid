@@ -64,7 +64,7 @@ class Grid:
             dx *= lambda_
             x += dx
         # Append values greater than xMax using the same geometric progression
-        while x <= self.border.xMax * lambda_:
+        while x <= self.border.xMax:
             xs.append(x)
             dx *= lambda_
             x += dx

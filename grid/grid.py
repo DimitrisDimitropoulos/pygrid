@@ -210,3 +210,173 @@ class Grid:
         plt.grid(True)
         plt.savefig("./out/connected_grid.svg")
         plt.show()
+
+    def write_grid_to_file(self, filename="grid.ascii"):
+        """
+        Write the grid data to a file in a specific format.
+        Translated from the provided Fortran code.
+        """
+        imax = len(self.calcX())
+        jmax = max(len(self.calcY(x)) for x in self.calcX())
+        with open(filename, "w") as file:
+            # Nodes
+            nindx = 2
+            nd = 2
+            file.write(f"{nindx} {nd}\n")
+            nindx = 10
+            file.write(f"{nindx}\n")
+            icol = 6  # Number of columns
+            izoneid = 0  # Number of zone, defines if the face is interior or boundary
+            NNT_start = 1  # Starting node
+            NNT_end = imax * jmax  # Ending node
+            itype = 0
+            node_nd = 2
+            file.write(
+                f"{icol} {nindx} {izoneid} {NNT_start} {NNT_end} {itype} {node_nd}\n"
+            )
+            izoneid = 8
+            itype = 1
+            file.write(f"{nindx}\n")
+            file.write(
+                f"{icol} {nindx} {izoneid} {NNT_start} {NNT_end} {itype} {node_nd}\n"
+            )
+            # Write node coordinates
+            for j in range(jmax):
+                for i in range(imax):
+                    x = self.xgrid(i, j)
+                    y = self.ygrid(i, j)
+                    file.write(f"{x:23.16f} {y:23.16f}\n")
+            # Cells
+            nindx = 12
+            izoneid = 0
+            itype = 0
+            nte_type = 0
+            NTE_start = 1
+            NTE_end = (imax - 1) * (jmax - 1)
+            file.write(f"{nindx}\n")
+            file.write(
+                f"{icol} {nindx} {izoneid} {NTE_start} {NTE_end} {itype} {nte_type}\n"
+            )
+            izoneid = 9
+            itype = 1
+            nte_type = 3
+            file.write(f"{nindx}\n")
+            file.write(
+                f"{icol} {nindx} {izoneid} {NTE_start} {NTE_end} {itype} {nte_type}\n"
+            )
+            # Faces
+            nindx = 13
+            izoneid = 0
+            itype = 0
+            NBC_type = 0
+            NFace_type = 0
+            nte_type = 0
+            # Calculate number of faces
+            nfaces_y = (imax - 2) * (jmax - 1)  # y normal faces
+            nfaces_x = (imax - 1) * (jmax - 2)  # x normal faces
+            nfaces_int = nfaces_x + nfaces_y
+            # Boundary faces
+            nfaces_ilo = jmax - 1
+            nfaces_ihi = jmax - 1
+            nfaces_jlo = imax - 1
+            nfaces_jhi = imax - 1  # Number of faces on jhi
+            nfaces_tot = nfaces_int + nfaces_ilo + nfaces_ihi + nfaces_jlo + nfaces_jhi
+            NFace_start = 1
+            NFace_end = nfaces_tot
+            icol = 6  # Number of columns
+            file.write(f"{nindx}\n")
+            file.write(
+                f"{icol} {nindx} {izoneid} {NFace_start} {NFace_end} {NBC_type} {NFace_type}\n"
+            )
+            # Interior faces
+            izoneid = 10
+            NBC_type = 2
+            NFace_type = 2
+            NFace_start = 1
+            NFace_end = nfaces_int
+            file.write(f"{nindx}\n")
+            file.write(
+                f"{icol} {nindx} {izoneid} {NFace_start} {NFace_end} {NBC_type} {NFace_type}\n"
+            )
+            icol = 4  # Number of columns
+            # Vertical faces
+            for j in range(1, jmax - 1):
+                for i in range(1, imax - 1):
+                    nod1 = j * imax + i + 1
+                    nod2 = nod1 + imax
+                    nel1 = (j - 1) * (imax - 1) + i
+                    nel2 = nel1 + 1
+                    file.write(f"{icol} {nod1} {nod2} {nel1} {nel2}\n")
+            # Horizontal faces
+            for j in range(1, jmax - 1):
+                for i in range(1, imax):
+                    nod1 = j * imax + i
+                    nod2 = nod1 + 1
+                    nel1 = (j - 1) * (imax - 1) + i
+                    nel2 = nel1 + (imax - 1)
+                    file.write(f"{icol} {nod1} {nod2} {nel1} {nel2}\n")
+            # Boundary faces
+            # j = jmax boundary - wall
+            izoneid = 4
+            NBC_type = 3
+            NFace_type = 2
+            NFace_start = NFace_end + 1
+            NFace_end = NFace_start + nfaces_jhi - 1
+            file.write(f"{nindx}\n")
+            file.write(
+                f"{icol} {nindx} {izoneid} {NFace_start} {NFace_end} {NBC_type} {NFace_type}\n"
+            )
+            for i in range(imax - 1):
+                nod1 = (jmax - 1) * imax + i + 2
+                nod2 = nod1 - 1
+                nel1 = (jmax - 2) * (imax - 1) + i + 1
+                nel2 = 0
+                file.write(f"{icol} {nod1} {nod2} {nel1} {nel2}\n")
+            # j = 1 boundary - wall
+            izoneid = 4
+            NBC_type = 3
+            NFace_type = 2
+            NFace_start = NFace_end + 1
+            NFace_end = NFace_start + nfaces_jlo - 1
+            file.write(f"{nindx}\n")
+            file.write(
+                f"{icol} {nindx} {izoneid} {NFace_start} {NFace_end} {NBC_type} {NFace_type}\n"
+            )
+            for i in range(imax - 1):
+                nod1 = i + 1
+                nod2 = i + 2
+                nel1 = i + 1
+                nel2 = 0
+                file.write(f"{icol} {nod1} {nod2} {nel1} {nel2}\n")
+            # i = imax boundary - Outflow
+            izoneid = 5
+            NBC_type = 0
+            NFace_type = 2
+            NFace_start = NFace_end + 1
+            NFace_end = NFace_start + nfaces_ihi - 1
+            file.write(f"{nindx}\n")
+            file.write(
+                f"{icol} {nindx} {izoneid} {NFace_start} {NFace_end} {NBC_type} {NFace_type}\n"
+            )
+            for j in range(jmax - 1):
+                nod1 = (j + 1) * imax
+                nod2 = nod1 + imax
+                nel1 = j * (imax - 1) + (imax - 1)
+                nel2 = 0
+                file.write(f"{icol} {nod1} {nod2} {nel1} {nel2}\n")
+            # i = 1 boundary - Inflow
+            izoneid = 4
+            NBC_type = 1
+            NFace_type = 2
+            NFace_start = NFace_end + 1
+            NFace_end = NFace_start + nfaces_ilo - 1
+            file.write(f"{nindx}\n")
+            file.write(
+                f"{icol} {nindx} {izoneid} {NFace_start} {NFace_end} {NBC_type} {NFace_type}\n"
+            )
+            for j in range(jmax - 1):
+                nod1 = j * imax + 1
+                nod2 = (j + 1) * imax + 1
+                nel1 = j * (imax - 1) + 1
+                nel2 = 0
+                file.write(f"{icol} {nod1} {nod2} {nel1} {nel2}\n")

@@ -44,7 +44,7 @@ class Border:
             return 0
         elif self.x2 <= x <= self.x3:
             return a3 * x**3 + a2 * x**2 + a1 * x + a0
-        elif self.x3 < x < self.xMax:
+        elif self.x3 < x <= self.xMax:
             return a3 * self.x3**3 + a2 * self.x3**2 + a1 * self.x3 + a0
         else:
             raise ValueError("x is out of the valid range")

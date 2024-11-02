@@ -186,9 +186,9 @@ class Grid:
                 ys = self.calcY(x)
                 x_values = [x] * len(ys)  # x-values set to the current x for each y
                 # Plot individual nodes
-                plt.scatter(x_values, ys, color="black", s=1)
+                # plt.scatter(x_values, ys, color="black", s=1)
                 # Connect nodes in a row along the y-axis
-                plt.plot([x] * len(ys), ys, color="gray", linewidth=0.5)
+                plt.plot([x] * len(ys), ys, color="black", linewidth=0.3)
             except ValueError as e:
                 print(f"Skipping x={x}: {e}")
         # Connect nodes in columns along the x-axis
@@ -200,7 +200,7 @@ class Grid:
                 if len(ys_current) == len(ys_next):
                     for y1, y2 in zip(ys_current, ys_next):
                         plt.plot(
-                            [xs[i], xs[i + 1]], [y1, y2], color="gray", linewidth=0.5
+                            [xs[i], xs[i + 1]], [y1, y2], color="black", linewidth=0.3
                         )
             except ValueError as e:
                 print(f"Skipping connection between x={xs[i]} and x={xs[i + 1]}: {e}")

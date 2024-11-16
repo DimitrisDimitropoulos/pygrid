@@ -16,8 +16,20 @@ print("x_values:", x_values)
 
 # grid.plotX()
 
-# grid.calcY(65)
 # print("y_values:", grid.calcY(65))
 # grid.plotY(65)
 
-grid.plotYForAllX()
+# print(grid.xgrid(0, 10))
+# print(grid.ygrid(0, 10))
+
+# grid.plotYForAllX()
+# grid.plotGrid()
+
+# Generate xgrid and ygrid for the grid
+imax = len(x_values)
+jmax = len(grid.calcY(x_values[0]))
+xgrid = [[grid.xgrid(i, j) for j in range(jmax)] for i in range(imax)]
+ygrid = [[grid.ygrid(i, j) for j in range(jmax)] for i in range(imax)]
+
+# Call generate_grid_ascii method
+grid.generate_grid_ascii(xgrid, ygrid, imax, jmax)

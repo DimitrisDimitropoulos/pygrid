@@ -26,10 +26,10 @@ print("x_values:", x_values)
 # grid.plotGrid()
 
 # Generate xgrid and ygrid for the grid
-imax = len(x_values)
-jmax = len(grid.calcY(x_values[0]))
+imax: int = len(x_values)
+jmax: int = len(grid.calcY(x_values[0]))
 xgrid = [[grid.xgrid(i, j) for j in range(jmax)] for i in range(imax)]
 ygrid = [[grid.ygrid(i, j) for j in range(jmax)] for i in range(imax)]
 
 # Call generate_grid_ascii method
-grid.generate_grid_ascii(xgrid, ygrid, imax, jmax)
+grid.generate_grid_ascii(imax, jmax, xgrid, ygrid)

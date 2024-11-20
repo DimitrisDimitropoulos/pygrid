@@ -39,33 +39,42 @@ class Grid:
     def calcX(self):
         """
         Calculate a vector of x-values from 0 to xMax with num_points.
-        :return: A numpy array of x-values
+        :return: A list of x-values
         """
         xs = []
+        seen = set()
         dx0 = 0.5
         lambda_ = 1.1
         # Prepend values using geometric progression until x is greater than 0
         x = self.border.x1
         dx = dx0
         while x > 0:
-            xs.insert(0, x)
+            if x not in seen:
+                xs.insert(0, x)
+                seen.add(x)
             dx *= lambda_
             x -= dx
         # Reset x to the initial value
         x = self.border.x1
         # Append values with equal spacing dx0
         while x <= self.border.x4:
-            xs.append(x)
+            if x not in seen:
+                xs.append(x)
+                seen.add(x)
             x += dx0
         # Append values using geometric progression until x exceeds xMax
         dx = dx0
         while x <= self.border.xMax:
-            xs.append(x)
+            if x not in seen:
+                xs.append(x)
+                seen.add(x)
             dx *= lambda_
             x += dx
         # Append values greater than xMax using the same geometric progression
         while x <= self.border.xMax:
-            xs.append(x)
+            if x not in seen:
+                xs.append(x)
+                seen.add(x)
             dx *= lambda_
             x += dx
         # make first at 0 and last at xMax
@@ -90,6 +99,7 @@ class Grid:
 
     def calcY(self, x):
         ys = []
+        seen = set()
         y_len = self.border.get_distance(x)
         y_star = self.border.get_upper(x) - y_len / 2
         y = self.border.get_lower(x)
@@ -97,18 +107,24 @@ class Grid:
         lambda_initial = 1.1  # Initial guess for lambda
         # Calculate lambda using the private method
         lambda_ = self._calculate_lambda(x, dy0, lambda_initial, 181)
-        ys.append(y)
+        if y not in seen:
+            ys.append(y)
+            seen.add(y)
         dy = dy0
         while y < y_star:
             y += dy
-            ys.append(y)
+            if y not in seen:
+                ys.append(y)
+                seen.add(y)
             dy *= lambda_
         # Delete the last value and replace it with y_star
         ys = ys[:-1]
         ys.append(y_star)
         # Calculate the symmetric points against y_star
         ys = ys[:-1]  # remove the last value
-        upper_part = [2 * y_star - y for y in reversed(ys)]
+        upper_part = [
+            2 * y_star - y for y in reversed(ys) if (2 * y_star - y) not in seen
+        ]
         # Append the upper part nodes
         ys.extend(upper_part)
         # print the length the x and lambda

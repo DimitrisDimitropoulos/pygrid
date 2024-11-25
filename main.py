@@ -31,5 +31,18 @@ jmax: int = len(grid.calcY(x_values[0]))
 xgrid = [[grid.xgrid(i, j) for j in range(jmax)] for i in range(imax)]
 ygrid = [[grid.ygrid(i, j) for j in range(jmax)] for i in range(imax)]
 
+# Print the number of elements in ygrid
+num_rows = len(ygrid)
+print("Number of rows in ygrid:", num_rows)
+
+if num_rows > 0:
+    num_columns = len(ygrid[0])
+    print("Number of columns in ygrid:", num_columns)
+else:
+    print("ygrid is empty")
+
+
+grid.plotGrid()
+
 # Call generate_grid_ascii method
 grid.generate_grid_ascii(imax, jmax, xgrid, ygrid)

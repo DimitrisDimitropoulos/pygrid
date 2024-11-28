@@ -204,7 +204,7 @@ class Grid:
                 # Plot individual nodes
                 # plt.scatter(x_values, ys, color="black", s=1)
                 # Connect nodes in a row along the y-axis
-                plt.plot([x] * len(ys), ys, color="black", linewidth=0.3)
+                plt.plot([x] * len(ys), ys, color="black", linewidth=0.1)
             except ValueError as e:
                 print(f"Skipping x={x}: {e}")
         # Connect nodes in columns along the x-axis
@@ -216,14 +216,14 @@ class Grid:
                 if len(ys_current) == len(ys_next):
                     for y1, y2 in zip(ys_current, ys_next):
                         plt.plot(
-                            [xs[i], xs[i + 1]], [y1, y2], color="black", linewidth=0.3
+                            [xs[i], xs[i + 1]], [y1, y2], color="black", linewidth=0.1
                         )
             except ValueError as e:
                 print(f"Skipping connection between x={xs[i]} and x={xs[i + 1]}: {e}")
         plt.xlabel("x")
         plt.ylabel("y")
         plt.title("Connected Nodes of the Grid")
-        plt.grid(True)
+        # plt.grid(True)
         plt.savefig("./out/connected_grid.svg")
         plt.show()
 

@@ -6,6 +6,9 @@ is the `main.py` file, which creates a `Border` and a `Grid` object, computes
 the grid points, plots the grid, and finally outputs an ASCII representation of
 the grid.
 
+![connected_grid](https://github.com/user-attachments/assets/eaa23103-ec2e-41b4-82bf-541742764564)
+
+
 ## Key Components
 
 - **Border Class (`border/border.py`):**  

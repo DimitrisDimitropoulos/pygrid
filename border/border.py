@@ -3,7 +3,7 @@ import numpy as np
 
 
 class Border:
-    def __init__(self, x1, x2, x3, x4, xMax, y1, y2):
+    def __init__(self, x1, x2, x3, x4, xMax, y1, y2, xMin):
         """
         Constructor for the Border class.
         :param x1: x1 coordinate
@@ -13,6 +13,7 @@ class Border:
         :param xMax: maximum x-coordinate
         :param y1: upper y-coordinate
         :param y2: lower y-coordinate
+        :param xMin: lower x bound
         """
         self.x1 = x1
         self.x2 = x2
@@ -21,6 +22,7 @@ class Border:
         self.xMax = xMax
         self.y1 = y1
         self.y2 = y2
+        self.xMin = xMin
 
     def get_upper(self, x):
         """
@@ -79,7 +81,7 @@ class Border:
         :return: The y-coordinate of the lower border
         """
         a3, a2, a1, a0 = self._calculate_coefficients()
-        if x < self.x2 and x >= 0:
+        if x < self.x2 and x >= self.xMin:
             return 0
         elif self.x2 <= x <= self.x3:
             return a3 * x**3 + a2 * x**2 + a1 * x + a0

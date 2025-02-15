@@ -44,11 +44,12 @@ class Grid:
         xs = []
         seen = set()
         dx0 = 0.5
+        # lambda_ = 1.07
         lambda_ = 1.1
         # Prepend values using geometric progression until x is greater than 0
         x = self.border.x1
         dx = dx0
-        while x > 0:
+        while x > self.border.xMin:
             if x not in seen:
                 xs.insert(0, x)
                 seen.add(x)
@@ -79,7 +80,7 @@ class Grid:
             x += dx
         # make first at 0 and last at xMax
         # NOTE: this is a manipulation of the original code
-        xs[0] = 0
+        xs[0] = self.border.xMin
         xs[-1] = self.border.xMax
         return xs
 

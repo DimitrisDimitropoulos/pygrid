@@ -3,7 +3,7 @@ from border.border import Border
 from grid.grid import Grid
 
 # Example usage
-border = Border(30, 44, 68, 70, 100, 4, 10)
+border = Border(30, 44, 68, 70, 100, 4, 10, 0)
 x = 65
 print("Upper:", border.get_upper(x))
 print("Lower:", border.get_lower(x))
